@@ -14,3 +14,15 @@ server.pid
 *.eml
 /dist/
 .cache
+# IntelliJ
+.idea
+*.ipr
+*.iml
+*.iws
+out
+java.hprof.txt
+.DS_Store
+# Compiled class file
+*.class
+# Log file
+*.log
