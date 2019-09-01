@@ -14,6 +14,7 @@ server.pid
 *.eml
 /dist/
 .cache
+.g8
 # IntelliJ
 .idea
 *.ipr
