@@ -1,0 +1,213 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: HomeController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">controllers</a> ]
+</div>
+
+<h1>Coverage Summary for Class: HomeController (controllers)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">HomeController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    73.9%
+  </span>
+  <span class="absValue">
+    (51/ 69)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">HomeController$$FastClassByGuice$$4f2e2472</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    73.9%
+  </span>
+  <span class="absValue">
+    (51/ 69)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package controllers;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import businesslayer.BusinessLayer;
+<i>4</i>&nbsp;import com.fasterxml.jackson.databind.node.ObjectNode;
+<i>5</i>&nbsp;import org.slf4j.Logger;
+<i>6</i>&nbsp;import org.slf4j.LoggerFactory;
+<i>7</i>&nbsp;import play.libs.Json;
+<i>8</i>&nbsp;import play.mvc.Controller;
+<i>9</i>&nbsp;import play.mvc.Http;
+<i>10</i>&nbsp;import play.mvc.Result;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;import java.io.File;
+<i>13</i>&nbsp;import java.io.IOException;
+<i>14</i>&nbsp;import java.util.HashSet;
+<i>15</i>&nbsp;import java.util.Set;
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;/**
+<i>18</i>&nbsp; * This controller contains an action to handle HTTP requests
+<i>19</i>&nbsp; * to the application&#39;s home page.
+<i>20</i>&nbsp; */
+<b class="fc"><i>21</i>&nbsp;public class HomeController extends Controller {</b>
+<b class="fc"><i>22</i>&nbsp;    final private Logger log = LoggerFactory.getLogger(this.getClass());</b>
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    /**
+<i>25</i>&nbsp;     * An action that renders an HTML page with a welcome message.
+<i>26</i>&nbsp;     * The configuration in the &lt;code&gt;routes&lt;/code&gt; file means that
+<i>27</i>&nbsp;     * this method will be called when the application receives a
+<i>28</i>&nbsp;     * &lt;code&gt;GET&lt;/code&gt; request with a path of &lt;code&gt;/&lt;/code&gt;.
+<i>29</i>&nbsp;     */
+<i>30</i>&nbsp;    public Result index() {
+<b class="fc"><i>31</i>&nbsp;        return ok(views.html.index.render());</b>
+<i>32</i>&nbsp;    }
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    public Result save(Http.Request request) {
+<b class="fc"><i>35</i>&nbsp;        log.info(&quot;inside save method of HomeController&quot;);</b>
+<b class="fc"><i>36</i>&nbsp;        ObjectNode result = Json.newObject();</b>
+<b class="fc"><i>37</i>&nbsp;        Http.MultipartFormData&lt;File&gt; body = request.body().asMultipartFormData();</b>
+<i>38</i>&nbsp;        Http.MultipartFormData.FilePart&lt;File&gt; file;
+<i>39</i>&nbsp;        try {
+<b class="fc"><i>40</i>&nbsp;            file = body.getFile(&quot;file&quot;);</b>
+<b class="nc"><i>41</i>&nbsp;        } catch (Exception e) {</b>
+<b class="nc"><i>42</i>&nbsp;            result.put(&quot;status&quot;, Http.Status.BAD_REQUEST);</b>
+<b class="nc"><i>43</i>&nbsp;            result.put(&quot;message&quot;, &quot;file not found&quot;);</b>
+<b class="nc"><i>44</i>&nbsp;            log.error(e.getClass().descriptorString());</b>
+<b class="nc"><i>45</i>&nbsp;            return badRequest(result);</b>
+<b class="fc"><i>46</i>&nbsp;        }</b>
+<b class="fc"><i>47</i>&nbsp;        if (file != null) {</b>
+<b class="fc"><i>48</i>&nbsp;            Result check = fileValidation(file);</b>
+<b class="fc"><i>49</i>&nbsp;            if (check.status() != 200) {</b>
+<b class="fc"><i>50</i>&nbsp;                return check;</b>
+<i>51</i>&nbsp;            }
+<b class="fc"><i>52</i>&nbsp;            File data = file.getFile();</b>
+<i>53</i>&nbsp;            try {
+<b class="fc"><i>54</i>&nbsp;                boolean res = BusinessLayer.saveWord(data);</b>
+<b class="fc"><i>55</i>&nbsp;                if (res) {</b>
+<b class="fc"><i>56</i>&nbsp;                    result.put(&quot;status&quot;, Http.Status.OK);</b>
+<b class="fc"><i>57</i>&nbsp;                    result.put(&quot;message&quot;, &quot;file saved successfully&quot;);</b>
+<b class="fc"><i>58</i>&nbsp;                    log.info(&quot;file saved successfully&quot;);</b>
+<b class="fc"><i>59</i>&nbsp;                    return ok(result);</b>
+<i>60</i>&nbsp;                } else {
+<b class="nc"><i>61</i>&nbsp;                    result.put(&quot;status&quot;, Http.Status.INTERNAL_SERVER_ERROR);</b>
+<b class="nc"><i>62</i>&nbsp;                    result.put(&quot;mesage&quot;, &quot;file not saved&quot;);</b>
+<b class="nc"><i>63</i>&nbsp;                    log.error(&quot;file not saved&quot;);</b>
+<b class="nc"><i>64</i>&nbsp;                    return internalServerError(result);</b>
+<i>65</i>&nbsp;                }
+<b class="nc"><i>66</i>&nbsp;            } catch (IOException e) {</b>
+<b class="nc"><i>67</i>&nbsp;                result.put(&quot;status&quot;, Http.Status.INTERNAL_SERVER_ERROR);</b>
+<b class="nc"><i>68</i>&nbsp;                result.put(&quot;message&quot;, e.getMessage());</b>
+<b class="nc"><i>69</i>&nbsp;                log.error(e.getClass().descriptorString());</b>
+<b class="nc"><i>70</i>&nbsp;                return internalServerError(result);</b>
+<i>71</i>&nbsp;            }
+<i>72</i>&nbsp;        } else {
+<b class="fc"><i>73</i>&nbsp;            result.put(&quot;status&quot;, Http.Status.BAD_REQUEST);</b>
+<b class="fc"><i>74</i>&nbsp;            result.put(&quot;message&quot;, &quot;file is empty&quot;);</b>
+<b class="fc"><i>75</i>&nbsp;            log.error(&quot;file is empty&quot;);</b>
+<b class="fc"><i>76</i>&nbsp;            return badRequest(result);</b>
+<i>77</i>&nbsp;        }
+<i>78</i>&nbsp;    }
+<i>79</i>&nbsp;
+<i>80</i>&nbsp;    public Result search(String word) {
+<b class="fc"><i>81</i>&nbsp;        log.info(&quot;inside search method of HomeController&quot;);</b>
+<b class="fc"><i>82</i>&nbsp;        ObjectNode result = Json.newObject();</b>
+<b class="fc"><i>83</i>&nbsp;        boolean output = BusinessLayer.searchWord(word);</b>
+<b class="fc"><i>84</i>&nbsp;        if (output) {</b>
+<b class="fc"><i>85</i>&nbsp;            result.put(&quot;status&quot;, Http.Status.OK);</b>
+<b class="fc"><i>86</i>&nbsp;            result.put(&quot;message&quot;, &quot;true&quot;);</b>
+<b class="fc"><i>87</i>&nbsp;            log.info(&quot;word is present&quot;);</b>
+<b class="fc"><i>88</i>&nbsp;            return ok(result);</b>
+<i>89</i>&nbsp;        } else {
+<b class="fc"><i>90</i>&nbsp;            result.put(&quot;status&quot;, Http.Status.NOT_FOUND);</b>
+<b class="fc"><i>91</i>&nbsp;            result.put(&quot;message&quot;, &quot;false&quot;);</b>
+<b class="fc"><i>92</i>&nbsp;            log.error(&quot;word not present&quot;);</b>
+<b class="fc"><i>93</i>&nbsp;            return notFound(result);</b>
+<i>94</i>&nbsp;        }
+<i>95</i>&nbsp;    }
+<i>96</i>&nbsp;
+<i>97</i>&nbsp;    public Result fileValidation(Http.MultipartFormData.FilePart&lt;File&gt; file) {
+<b class="fc"><i>98</i>&nbsp;        log.info(&quot;inside fileValidation method of HomeController&quot;);</b>
+<b class="fc"><i>99</i>&nbsp;        final long MAX_FILE_SIZE = 200 * 1024 * 1024;</b>
+<b class="fc"><i>100</i>&nbsp;        Set&lt;String&gt; supportedFormats = new HashSet&lt;&gt;();</b>
+<b class="fc"><i>101</i>&nbsp;        supportedFormats.add(&quot;text/plain&quot;);</b>
+<b class="fc"><i>102</i>&nbsp;        supportedFormats.add(&quot;application/msword&quot;);</b>
+<b class="fc"><i>103</i>&nbsp;        supportedFormats.add(&quot;application/vnd.openxmlformats-officedocument.wordprocessingml.document&quot;);</b>
+<b class="fc"><i>104</i>&nbsp;        ObjectNode result = Json.newObject();</b>
+<b class="fc"><i>105</i>&nbsp;        String contentType = file.getContentType();</b>
+<b class="fc"><i>106</i>&nbsp;        long fileSize = file.getFileSize();</b>
+<b class="fc"><i>107</i>&nbsp;        if (!supportedFormats.contains(contentType)) {</b>
+<b class="fc"><i>108</i>&nbsp;            result.put(&quot;status&quot;, Http.Status.UNSUPPORTED_MEDIA_TYPE);</b>
+<b class="fc"><i>109</i>&nbsp;            result.put(&quot;message&quot;, &quot;This api supports only text/doc files&quot;);</b>
+<b class="fc"><i>110</i>&nbsp;            log.error(&quot;invalid file type&quot;);</b>
+<b class="fc"><i>111</i>&nbsp;            return unsupportedMediaType(result);</b>
+<b class="fc"><i>112</i>&nbsp;        } else if (fileSize &gt; MAX_FILE_SIZE) {</b>
+<b class="nc"><i>113</i>&nbsp;            result.put(&quot;status&quot;, Http.Status.BAD_REQUEST);</b>
+<b class="nc"><i>114</i>&nbsp;            result.put(&quot;message&quot;, &quot;file size greater than 200 MB&quot;);</b>
+<b class="nc"><i>115</i>&nbsp;            log.error(&quot;invalid file size&quot;);</b>
+<b class="nc"><i>116</i>&nbsp;            return badRequest(result);</b>
+<i>117</i>&nbsp;        } else
+<b class="fc"><i>118</i>&nbsp;            return ok();</b>
+<i>119</i>&nbsp;    }
+<i>120</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-09-01 21:36</div>
+</div>
+</body>
+</html>

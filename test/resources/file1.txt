@@ -1,0 +1,71 @@
+Details
+Properties of the proposed architecture
+Horizontal Scaling
+Fault tolerant
+High availability
+No single point of failure
+Modular
+
+Components:
+APIGEE Hybrid Gateway(https://docs.apigee.com/hybrid/beta2/what-is-hybrid):
+Apigee Hybrid Gateway comes bundled with Istio Ingress.
+Apigee Hybrid helps you manage all internal and external APIs with a single platform.
+Apigee Hybrid is deployed on Kubernetes cluster in an environment close to our backend microservices thereby reducing latency.
+It fronts are backend services with a proxy layer and provides an abstraction for our backend service APIs and provides security, rate limiting, quotas, analytics, and more.
+It will act as the edge service or entry point for incoming requests from client
+browsers, devices. It will also be responsible for authentication of incoming requests by validating the tokens against the outh sevrice which in turn will provide the JWT Token.the token is then used to authenticate to Write API/Read API
+API Gateway will receive incoming requests over HTTPS and will be responsible for SSL termination at the API Gateway
+
+Kubernetes:
+Kubernetes is an open source orchestrator for deploying and managing containerized applications at scale.It has self healing properties,intelligent scheduling, horizontal scaling and many more.All our microservices along with Apigee gateway will be deployed on Kubernetes.
+
+Web services :
+We will have three microservices:
+1)Auth API
+2)Writer API
+3)Read API
+
+Auth API :It will provide authentication to the Writer Service and Read Service to ensure whether caller is authorized to make calls or not.
+
+Writer API: The Write API will accept request of user activity and store the raw time series events in database which is then fed to spark clusters for processing.
+The WRITE API will accept request from user website click event that needs to get stored in database on top of which processing and reporting can be done.
+
+Read Service:The Read API will receive request which has queries from the users.
+These requests are then published to a separate Kafka topic on the Kafka service.
+The READ API will accept request from Merchant users that want to see Analytics metrics, time series metrics
+
+Kafka:
+Kafka is a distributed streaming and message queue platform.
+It is linearly scalable and fault tolerant.
+High throughput.
+This will serve as buffer between web service and DB to handle the traffic spikes.
+
+Influx DB with Influx DB Relay:
+InfluxDB is a scalable datastore for metrics, events, and real-time analytics.InfluxDB is designed to be scalable, simple to install and manage, and fast to get data in and out.
+Influx DB relay adds a layer of high availability on top of influx db.
+
+Memcached:
+Memcached is in-memory data storage and high-performance distributed memory cache service.
+Memcached utilizes multiple cores hence memcahed becomes useful when dealing with high volumes of data like in our case.
+Since we can only store a limited amount of data in cache, "Cache-aside" mechanism known as lazy loading serves best for design. Only requested data is cached, which avoids filling up the cache with data that isn't requested.
+
+Apache Spark:
+In-Memory Computation in Spark: Here the data is being cached so we need not fetch data from the disk every time thus the time is saved
+Dynamic in Nature: We can easily develop a parallel application, as Spark provides 80 high-level operators
+Fault Tolerance in Spark: Apache Spark provides fault tolerance through Spark abstraction-RDD. Spark RDDs are designed to handle the failure of any worker node in the cluster. Thus, it ensures that the loss of data is reduced to zero
+
+
+
+
+
+Run with minimum downtime:
+Systems at multiple level work in tandem to ensure its designed for worst case scenario. So system at each level are fault tolerant and highly scalable.
+Load Balancer : Ensures to route http(s) request to available webserver, ensuring high availability. Also raise alert if its not able to connect to any webserver. Multiple webserver ensures fault tolerance nature of http request being forwarded from Load balancer to down systems.
+Kubernetes Cluster: Kubernetes cluster ensures availability and reliability of Microservices beneath. Kubernetes can scale-up or down based on need and volume.
+KAFKA Broker: KAFKA by default is very reliable system and more over KAFKA is setup in cluster mode which will fortify that KAFKA will be available always without data integrity issues occurring because of KAFKA cluster node/paritition failures.
+Spark Cluster: Ensures availability throughout the day and during node failure as other node takes over the query processing.
+
+
+Have the ability to reprocess historical data in case of bugs in the processing logic.
+One of the native capability of KAFKA Topic is replay message. Also as message remains on the topic even after consumer consumes it, That means KAFKA cluster store and replicate each message published on its TOPIC. This gives us very flexible message replay capabilities based on date/timestamp/any other key factor by which events have been stored.
+Once message is replayed from KAFKA, further flow in the system will remain as it is and it will start processing data as normal processing.

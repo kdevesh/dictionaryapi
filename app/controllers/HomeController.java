@@ -83,12 +83,12 @@ public class HomeController extends Controller {
         boolean output = BusinessLayer.searchWord(word);
         if (output) {
             result.put("status", Http.Status.OK);
-            result.put("message", "found");
+            result.put("message", "true");
             log.info("word is present");
             return ok(result);
         } else {
             result.put("status", Http.Status.NOT_FOUND);
-            result.put("message", "not found");
+            result.put("message", "false");
             log.error("word not present");
             return notFound(result);
         }
