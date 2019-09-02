@@ -29,7 +29,6 @@ public class BusinessLayer {
     }
 
     public static boolean searchWord(String word) {
-        log.info("inside searchWord() of BusinessLayer");
         return DataAccessLayer.searchWord(word.toLowerCase());
     }
 }
