@@ -27,7 +27,6 @@ public class DataAccessLayer {
     }
 
     public static boolean searchWord(String word) {
-        log.info("inside searchWord() of DataAccessLayer");
         Dictionary res = Dictionary.find.query().where().eq("word", word).findOne();
         return res!=null;
     }
