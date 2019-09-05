@@ -12,9 +12,13 @@ JUnit Test Cases are also included.
 To see the coverage report go to folder coverage and open index.html
 
 To run the test cases again comment the play.evolutions block in application.conf inside conf folder
+
+```json
 play.evolutions{
   db.default.enabled = true
 }
+```
+
 
 Requirements to run this project :
 i) JAVA 8 or above
