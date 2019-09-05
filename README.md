@@ -1,5 +1,7 @@
 # **Dictionary API:**
 This dictionary api has been created using JAVA and Play Framework and H2 database.
+
+
 **The endpoints are:**
 POST /save
 GET  /search/:word
@@ -31,6 +33,6 @@ How To Run the Application:
 •	You can use localhost:9000/save endpoint to save the file
 •	And localhost:9000/search/:word to search for word                                                                                 
 
-METHOD 2:
+**METHOD 2:**
 Go inside the project folder:
 Type sbt update then sbt compile and finally sbt run the application will start running at port 9000
