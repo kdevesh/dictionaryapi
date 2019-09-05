@@ -20,6 +20,7 @@ ii) sbt (build tool for play framework and for dependency management)
 Optional if you want to import code in any IDE use Intellij (install scala plugin in Intellij)
 
 How To Run the Application:
+
 **METHOD 1:**
 •	I have packaged the application and is present in the folder as zipped folder (dictionary-api-1.0-SNAPSHOT.zip)
 •	Unzip the folder(dictionary-api-1.0-SNAPSHOT.zip) go inside bin folder you will see to scripts (bash and .bat) for linux and windows respectively.
