@@ -13,7 +13,7 @@ To see the coverage report go to folder coverage and open index.html
 
 To run the test cases again comment the play.evolutions block in application.conf inside conf folder
 
-```json
+```yaml
 play.evolutions{
   db.default.enabled = true
 }
