@@ -21,8 +21,8 @@ play.evolutions{
 
 
 Requirements to run this project :
-i) JAVA 8 or above
-ii) sbt (build tool for play framework and for dependency management)
+i) JAVA 8 or above <br/>
+ii) sbt (build tool for play framework and for dependency management)<br/>
 Optional if you want to import code in any IDE use Intellij (install scala plugin in Intellij)
 
 How To Run the Application:
